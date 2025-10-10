@@ -41,18 +41,23 @@ docker exec -it -d ollama ollama run qwen3:4b-instruct-2507-q4_K_M
 docker exec -it -d ollama ollama run dengcao/Qwen3-Embedding-4B:Q4_K_M
 ```
 
-#### 5) Open Flowise on 
+#### 5) Run pgadmin
+```bash
+docker run -d --name pgadmin_container -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=user@example.com -e PGADMIN_DEFAULT_PASSWORD=your_secure_password --network cognee-network dpage/pgadmin4
+```
+
+#### 6) Open Flowise on 
 ```text
 http://localhost:3000/
 ```
 
-#### 6) Load this [Agentflow](https://github.com/Piankov-Michail/GraphRAG_Flowise/blob/6b990d15b47b869256466d47c89f7205c49ffa6a/GraphRAG%20Agents.json) to Flowise <br> <br>
-#### 7) To see knowledge graph in neo4j open 
+#### 7) Load this [Agentflow](https://github.com/Piankov-Michail/GraphRAG_Flowise/blob/6b990d15b47b869256466d47c89f7205c49ffa6a/GraphRAG%20Agents.json) to Flowise <br> <br>
+#### 8) To see knowledge graph in neo4j open 
 ```text
 http://localhost:7474/
 ```
 
-#### 8) To see vectorDB and relationDB in pgAdmin open 
+#### 9) To see vectorDB and relationDB in pgAdmin open 
 ```text
 http://localhost:5050/
 ```
