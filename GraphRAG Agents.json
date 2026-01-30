@@ -1,607 +1,574 @@
 {
   "nodes": [
     {
-      "id": "startAgentflow_0",
-      "type": "agentFlow",
+      "id": "toolAgent_0",
       "position": {
-        "x": 100,
-        "y": 100
+        "x": 544,
+        "y": 190
       },
+      "type": "customNode",
       "data": {
-        "id": "startAgentflow_0",
-        "label": "Start",
-        "version": 1.1,
-        "name": "startAgentflow",
-        "type": "Start",
-        "color": "#7EE787",
-        "hideInput": true,
+        "id": "toolAgent_0",
+        "label": "Tool Agent",
+        "version": 2,
+        "name": "toolAgent",
+        "type": "AgentExecutor",
         "baseClasses": [
-          "Start"
+          "AgentExecutor",
+          "BaseChain",
+          "Runnable"
         ],
-        "category": "Agent Flows",
-        "description": "Starting point of the agentflow",
+        "category": "Agents",
+        "description": "Agent that uses Function Calling to pick the tools and args to call",
         "inputParams": [
           {
-            "label": "Input Type",
-            "name": "startInputType",
-            "type": "options",
-            "options": [
-              {
-                "label": "Chat Input",
-                "name": "chatInput",
-                "description": "Start the conversation with chat input"
-              },
-              {
-                "label": "Form Input",
-                "name": "formInput",
-                "description": "Start the workflow with form inputs"
-              }
-            ],
-            "default": "chatInput",
-            "id": "startAgentflow_0-input-startInputType-options",
-            "display": true
-          },
-          {
-            "label": "Form Title",
-            "name": "formTitle",
+            "label": "System Message",
+            "name": "systemMessage",
             "type": "string",
-            "placeholder": "Please Fill Out The Form",
-            "show": {
-              "startInputType": "formInput"
-            },
-            "id": "startAgentflow_0-input-formTitle-string",
-            "display": false
-          },
-          {
-            "label": "Form Description",
-            "name": "formDescription",
-            "type": "string",
-            "placeholder": "Complete all fields below to continue",
-            "show": {
-              "startInputType": "formInput"
-            },
-            "id": "startAgentflow_0-input-formDescription-string",
-            "display": false
-          },
-          {
-            "label": "Form Input Types",
-            "name": "formInputTypes",
-            "description": "Specify the type of form input",
-            "type": "array",
-            "show": {
-              "startInputType": "formInput"
-            },
-            "array": [
-              {
-                "label": "Type",
-                "name": "type",
-                "type": "options",
-                "options": [
-                  {
-                    "label": "String",
-                    "name": "string"
-                  },
-                  {
-                    "label": "Number",
-                    "name": "number"
-                  },
-                  {
-                    "label": "Boolean",
-                    "name": "boolean"
-                  },
-                  {
-                    "label": "Options",
-                    "name": "options"
-                  }
-                ],
-                "default": "string"
-              },
-              {
-                "label": "Label",
-                "name": "label",
-                "type": "string",
-                "placeholder": "Label for the input"
-              },
-              {
-                "label": "Variable Name",
-                "name": "name",
-                "type": "string",
-                "placeholder": "Variable name for the input (must be camel case)",
-                "description": "Variable name must be camel case. For example: firstName, lastName, etc."
-              },
-              {
-                "label": "Add Options",
-                "name": "addOptions",
-                "type": "array",
-                "show": {
-                  "formInputTypes[$index].type": "options"
-                },
-                "array": [
-                  {
-                    "label": "Option",
-                    "name": "option",
-                    "type": "string"
-                  }
-                ]
-              }
-            ],
-            "id": "startAgentflow_0-input-formInputTypes-array",
-            "display": false
-          },
-          {
-            "label": "Ephemeral Memory",
-            "name": "startEphemeralMemory",
-            "type": "boolean",
-            "description": "Start fresh for every execution without past chat history",
+            "default": "You are a helpful AI assistant.",
+            "description": "If Chat Prompt Template is provided, this will be ignored",
+            "rows": 4,
             "optional": true,
-            "id": "startAgentflow_0-input-startEphemeralMemory-boolean",
+            "additionalParams": true,
+            "id": "toolAgent_0-input-systemMessage-string",
             "display": true
           },
           {
-            "label": "Flow State",
-            "name": "startState",
-            "description": "Runtime state during the execution of the workflow",
-            "type": "array",
+            "label": "Max Iterations",
+            "name": "maxIterations",
+            "type": "number",
             "optional": true,
-            "array": [
-              {
-                "label": "Key",
-                "name": "key",
-                "type": "string",
-                "placeholder": "Foo"
-              },
-              {
-                "label": "Value",
-                "name": "value",
-                "type": "string",
-                "placeholder": "Bar",
-                "optional": true
-              }
-            ],
-            "id": "startAgentflow_0-input-startState-array",
+            "additionalParams": true,
+            "id": "toolAgent_0-input-maxIterations-number",
             "display": true
           },
           {
-            "label": "Persist State",
-            "name": "startPersistState",
+            "label": "Enable Detailed Streaming",
+            "name": "enableDetailedStreaming",
             "type": "boolean",
-            "description": "Persist the state in the same session",
+            "default": false,
+            "description": "Stream detailed intermediate steps during agent execution",
             "optional": true,
-            "id": "startAgentflow_0-input-startPersistState-boolean",
+            "additionalParams": true,
+            "id": "toolAgent_0-input-enableDetailedStreaming-boolean",
             "display": true
           }
         ],
-        "inputAnchors": [],
+        "inputAnchors": [
+          {
+            "label": "Tools",
+            "name": "tools",
+            "type": "Tool",
+            "list": true,
+            "id": "toolAgent_0-input-tools-Tool",
+            "display": true
+          },
+          {
+            "label": "Memory",
+            "name": "memory",
+            "type": "BaseChatMemory",
+            "id": "toolAgent_0-input-memory-BaseChatMemory",
+            "display": true
+          },
+          {
+            "label": "Tool Calling Chat Model",
+            "name": "model",
+            "type": "BaseChatModel",
+            "description": "Only compatible with models that are capable of function calling: ChatOpenAI, ChatMistral, ChatAnthropic, ChatGoogleGenerativeAI, ChatVertexAI, GroqChat",
+            "id": "toolAgent_0-input-model-BaseChatModel",
+            "display": true
+          },
+          {
+            "label": "Chat Prompt Template",
+            "name": "chatPromptTemplate",
+            "type": "ChatPromptTemplate",
+            "description": "Override existing prompt with Chat Prompt Template. Human Message must includes {input} variable",
+            "optional": true,
+            "id": "toolAgent_0-input-chatPromptTemplate-ChatPromptTemplate",
+            "display": true
+          },
+          {
+            "label": "Input Moderation",
+            "description": "Detect text that could generate harmful output and prevent it from being sent to the language model",
+            "name": "inputModeration",
+            "type": "Moderation",
+            "optional": true,
+            "list": true,
+            "id": "toolAgent_0-input-inputModeration-Moderation",
+            "display": true
+          }
+        ],
         "inputs": {
-          "startInputType": "chatInput",
-          "formTitle": "",
-          "formDescription": "",
-          "formInputTypes": "",
-          "startEphemeralMemory": "",
-          "startState": "",
-          "startPersistState": ""
+          "tools": [
+            "{{customMCP_0.data.instance}}"
+          ],
+          "memory": "{{bufferMemory_0.data.instance}}",
+          "model": "{{chatOllama_0.data.instance}}",
+          "chatPromptTemplate": "",
+          "systemMessage": "You are a helpful AI assistant.",
+          "inputModeration": "",
+          "maxIterations": "",
+          "enableDetailedStreaming": ""
         },
         "outputAnchors": [
           {
-            "id": "startAgentflow_0-output-startAgentflow",
-            "label": "Start",
-            "name": "startAgentflow"
+            "id": "toolAgent_0-output-toolAgent-AgentExecutor|BaseChain|Runnable",
+            "name": "toolAgent",
+            "label": "AgentExecutor",
+            "description": "Agent that uses Function Calling to pick the tools and args to call",
+            "type": "AgentExecutor | BaseChain | Runnable"
           }
         ],
         "outputs": {},
         "selected": false
       },
-      "width": 103,
-      "height": 66,
+      "width": 300,
+      "height": 490,
       "positionAbsolute": {
-        "x": 100,
-        "y": 100
+        "x": 544,
+        "y": 190
       },
       "selected": false
     },
     {
-      "id": "agentAgentflow_0",
+      "id": "chatOllama_0",
       "position": {
-        "x": 236.5,
-        "y": 90.75
+        "x": 25.73800862678766,
+        "y": 217.08560177919998
       },
+      "type": "customNode",
       "data": {
-        "id": "agentAgentflow_0",
-        "label": "Agent 0",
-        "version": 2,
-        "name": "agentAgentflow",
-        "type": "Agent",
-        "color": "#4DD0E1",
+        "id": "chatOllama_0",
+        "label": "ChatOllama",
+        "version": 5,
+        "name": "chatOllama",
+        "type": "ChatOllama",
         "baseClasses": [
-          "Agent"
+          "ChatOllama",
+          "ChatOllama",
+          "BaseChatModel",
+          "BaseLanguageModel",
+          "Runnable"
         ],
-        "category": "Agent Flows",
-        "description": "Dynamically choose and utilize tools during runtime, enabling multi-step reasoning",
+        "category": "Chat Models",
+        "description": "Chat completion using open-source LLM on Ollama",
         "inputParams": [
           {
-            "label": "Model",
-            "name": "agentModel",
-            "type": "asyncOptions",
-            "loadMethod": "listModels",
-            "loadConfig": true,
-            "id": "agentAgentflow_0-input-agentModel-asyncOptions",
+            "label": "Base URL",
+            "name": "baseUrl",
+            "type": "string",
+            "default": "http://localhost:11434",
+            "id": "chatOllama_0-input-baseUrl-string",
             "display": true
           },
           {
-            "label": "Messages",
-            "name": "agentMessages",
-            "type": "array",
-            "optional": true,
-            "acceptVariable": true,
-            "array": [
-              {
-                "label": "Role",
-                "name": "role",
-                "type": "options",
-                "options": [
-                  {
-                    "label": "System",
-                    "name": "system"
-                  },
-                  {
-                    "label": "Assistant",
-                    "name": "assistant"
-                  },
-                  {
-                    "label": "Developer",
-                    "name": "developer"
-                  },
-                  {
-                    "label": "User",
-                    "name": "user"
-                  }
-                ]
-              },
-              {
-                "label": "Content",
-                "name": "content",
-                "type": "string",
-                "acceptVariable": true,
-                "generateInstruction": true,
-                "rows": 4
-              }
-            ],
-            "id": "agentAgentflow_0-input-agentMessages-array",
+            "label": "Model Name",
+            "name": "modelName",
+            "type": "string",
+            "placeholder": "llama2",
+            "id": "chatOllama_0-input-modelName-string",
             "display": true
           },
           {
-            "label": "OpenAI Built-in Tools",
-            "name": "agentToolsBuiltInOpenAI",
-            "type": "multiOptions",
+            "label": "Temperature",
+            "name": "temperature",
+            "type": "number",
+            "description": "The temperature of the model. Increasing the temperature will make the model answer more creatively. (Default: 0.8). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
+            "default": 0.9,
             "optional": true,
-            "options": [
-              {
-                "label": "Web Search",
-                "name": "web_search_preview",
-                "description": "Search the web for the latest information"
-              },
-              {
-                "label": "Code Interpreter",
-                "name": "code_interpreter",
-                "description": "Write and run Python code in a sandboxed environment"
-              },
-              {
-                "label": "Image Generation",
-                "name": "image_generation",
-                "description": "Generate images based on a text prompt"
-              }
-            ],
-            "show": {
-              "agentModel": "chatOpenAI"
-            },
-            "id": "agentAgentflow_0-input-agentToolsBuiltInOpenAI-multiOptions",
-            "display": false
-          },
-          {
-            "label": "Tools",
-            "name": "agentTools",
-            "type": "array",
-            "optional": true,
-            "array": [
-              {
-                "label": "Tool",
-                "name": "agentSelectedTool",
-                "type": "asyncOptions",
-                "loadMethod": "listTools",
-                "loadConfig": true
-              },
-              {
-                "label": "Require Human Input",
-                "name": "agentSelectedToolRequiresHumanInput",
-                "type": "boolean",
-                "optional": true
-              }
-            ],
-            "id": "agentAgentflow_0-input-agentTools-array",
+            "id": "chatOllama_0-input-temperature-number",
             "display": true
           },
           {
-            "label": "Knowledge (Document Stores)",
-            "name": "agentKnowledgeDocumentStores",
-            "type": "array",
-            "description": "Give your agent context about different document sources. Document stores must be upserted in advance.",
-            "array": [
-              {
-                "label": "Document Store",
-                "name": "documentStore",
-                "type": "asyncOptions",
-                "loadMethod": "listStores"
-              },
-              {
-                "label": "Describe Knowledge",
-                "name": "docStoreDescription",
-                "type": "string",
-                "generateDocStoreDescription": true,
-                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
-                "rows": 4
-              },
-              {
-                "label": "Return Source Documents",
-                "name": "returnSourceDocuments",
-                "type": "boolean",
-                "optional": true
-              }
-            ],
-            "optional": true,
-            "id": "agentAgentflow_0-input-agentKnowledgeDocumentStores-array",
-            "display": true
-          },
-          {
-            "label": "Knowledge (Vector Embeddings)",
-            "name": "agentKnowledgeVSEmbeddings",
-            "type": "array",
-            "description": "Give your agent context about different document sources from existing vector stores and embeddings",
-            "array": [
-              {
-                "label": "Vector Store",
-                "name": "vectorStore",
-                "type": "asyncOptions",
-                "loadMethod": "listVectorStores",
-                "loadConfig": true
-              },
-              {
-                "label": "Embedding Model",
-                "name": "embeddingModel",
-                "type": "asyncOptions",
-                "loadMethod": "listEmbeddings",
-                "loadConfig": true
-              },
-              {
-                "label": "Knowledge Name",
-                "name": "knowledgeName",
-                "type": "string",
-                "placeholder": "A short name for the knowledge base, this is useful for the AI to know when and how to search for correct information"
-              },
-              {
-                "label": "Describe Knowledge",
-                "name": "knowledgeDescription",
-                "type": "string",
-                "placeholder": "Describe what the knowledge base is about, this is useful for the AI to know when and how to search for correct information",
-                "rows": 4
-              },
-              {
-                "label": "Return Source Documents",
-                "name": "returnSourceDocuments",
-                "type": "boolean",
-                "optional": true
-              }
-            ],
-            "optional": true,
-            "id": "agentAgentflow_0-input-agentKnowledgeVSEmbeddings-array",
-            "display": true
-          },
-          {
-            "label": "Enable Memory",
-            "name": "agentEnableMemory",
+            "label": "Allow Image Uploads",
+            "name": "allowImageUploads",
             "type": "boolean",
-            "description": "Enable memory for the conversation thread",
+            "description": "Allow image input. Refer to the <a href=\"https://docs.flowiseai.com/using-flowise/uploads#image\" target=\"_blank\">docs</a> for more details.",
+            "default": false,
+            "optional": true,
+            "id": "chatOllama_0-input-allowImageUploads-boolean",
+            "display": true
+          },
+          {
+            "label": "Streaming",
+            "name": "streaming",
+            "type": "boolean",
             "default": true,
             "optional": true,
-            "id": "agentAgentflow_0-input-agentEnableMemory-boolean",
+            "additionalParams": true,
+            "id": "chatOllama_0-input-streaming-boolean",
             "display": true
           },
           {
-            "label": "Memory Type",
-            "name": "agentMemoryType",
-            "type": "options",
-            "options": [
-              {
-                "label": "All Messages",
-                "name": "allMessages",
-                "description": "Retrieve all messages from the conversation"
-              },
-              {
-                "label": "Window Size",
-                "name": "windowSize",
-                "description": "Uses a fixed window size to surface the last N messages"
-              },
-              {
-                "label": "Conversation Summary",
-                "name": "conversationSummary",
-                "description": "Summarizes the whole conversation"
-              },
-              {
-                "label": "Conversation Summary Buffer",
-                "name": "conversationSummaryBuffer",
-                "description": "Summarize conversations once token limit is reached. Default to 2000"
-              }
-            ],
+            "label": "JSON Mode",
+            "name": "jsonMode",
+            "type": "boolean",
+            "description": "Coerces model outputs to only return JSON. Specify in the system prompt to return JSON. Ex: Format all responses as JSON object",
             "optional": true,
-            "default": "allMessages",
-            "show": {
-              "agentEnableMemory": true
-            },
-            "id": "agentAgentflow_0-input-agentMemoryType-options",
+            "additionalParams": true,
+            "id": "chatOllama_0-input-jsonMode-boolean",
             "display": true
           },
           {
-            "label": "Window Size",
-            "name": "agentMemoryWindowSize",
-            "type": "number",
-            "default": "20",
-            "description": "Uses a fixed window size to surface the last N messages",
-            "show": {
-              "agentMemoryType": "windowSize"
-            },
-            "id": "agentAgentflow_0-input-agentMemoryWindowSize-number",
-            "display": false
-          },
-          {
-            "label": "Max Token Limit",
-            "name": "agentMemoryMaxTokenLimit",
-            "type": "number",
-            "default": "2000",
-            "description": "Summarize conversations once token limit is reached. Default to 2000",
-            "show": {
-              "agentMemoryType": "conversationSummaryBuffer"
-            },
-            "id": "agentAgentflow_0-input-agentMemoryMaxTokenLimit-number",
-            "display": false
-          },
-          {
-            "label": "Input Message",
-            "name": "agentUserMessage",
+            "label": "Keep Alive",
+            "name": "keepAlive",
             "type": "string",
-            "description": "Add an input message as user message at the end of the conversation",
+            "description": "How long to keep connection alive. A duration string (such as \"10m\" or \"24h\")",
+            "default": "5m",
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-keepAlive-string",
+            "display": true
+          },
+          {
+            "label": "Top P",
+            "name": "topP",
+            "type": "number",
+            "description": "Works together with top-k. A higher value (e.g., 0.95) will lead to more diverse text, while a lower value (e.g., 0.5) will generate more focused and conservative text. (Default: 0.9). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-topP-number",
+            "display": true
+          },
+          {
+            "label": "Top K",
+            "name": "topK",
+            "type": "number",
+            "description": "Reduces the probability of generating nonsense. A higher value (e.g. 100) will give more diverse answers, while a lower value (e.g. 10) will be more conservative. (Default: 40). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-topK-number",
+            "display": true
+          },
+          {
+            "label": "Mirostat",
+            "name": "mirostat",
+            "type": "number",
+            "description": "Enable Mirostat sampling for controlling perplexity. (default: 0, 0 = disabled, 1 = Mirostat, 2 = Mirostat 2.0). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-mirostat-number",
+            "display": true
+          },
+          {
+            "label": "Mirostat ETA",
+            "name": "mirostatEta",
+            "type": "number",
+            "description": "Influences how quickly the algorithm responds to feedback from the generated text. A lower learning rate will result in slower adjustments, while a higher learning rate will make the algorithm more responsive. (Default: 0.1) Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-mirostatEta-number",
+            "display": true
+          },
+          {
+            "label": "Mirostat TAU",
+            "name": "mirostatTau",
+            "type": "number",
+            "description": "Controls the balance between coherence and diversity of the output. A lower value will result in more focused and coherent text. (Default: 5.0) Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-mirostatTau-number",
+            "display": true
+          },
+          {
+            "label": "Context Window Size",
+            "name": "numCtx",
+            "type": "number",
+            "description": "Sets the size of the context window used to generate the next token. (Default: 2048) Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-numCtx-number",
+            "display": true
+          },
+          {
+            "label": "Number of GPU",
+            "name": "numGpu",
+            "type": "number",
+            "description": "The number of layers to send to the GPU(s). On macOS it defaults to 1 to enable metal support, 0 to disable. Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-numGpu-number",
+            "display": true
+          },
+          {
+            "label": "Number of Thread",
+            "name": "numThread",
+            "type": "number",
+            "description": "Sets the number of threads to use during computation. By default, Ollama will detect this for optimal performance. It is recommended to set this value to the number of physical CPU cores your system has (as opposed to the logical number of cores). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-numThread-number",
+            "display": true
+          },
+          {
+            "label": "Repeat Last N",
+            "name": "repeatLastN",
+            "type": "number",
+            "description": "Sets how far back for the model to look back to prevent repetition. (Default: 64, 0 = disabled, -1 = num_ctx). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-repeatLastN-number",
+            "display": true
+          },
+          {
+            "label": "Repeat Penalty",
+            "name": "repeatPenalty",
+            "type": "number",
+            "description": "Sets how strongly to penalize repetitions. A higher value (e.g., 1.5) will penalize repetitions more strongly, while a lower value (e.g., 0.9) will be more lenient. (Default: 1.1). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
+            "optional": true,
+            "additionalParams": true,
+            "id": "chatOllama_0-input-repeatPenalty-number",
+            "display": true
+          },
+          {
+            "label": "Stop Sequence",
+            "name": "stop",
+            "type": "string",
             "rows": 4,
+            "placeholder": "AI assistant:",
+            "description": "Sets the stop sequences to use. Use comma to seperate different sequences. Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
             "optional": true,
-            "acceptVariable": true,
-            "show": {
-              "agentEnableMemory": true
-            },
-            "id": "agentAgentflow_0-input-agentUserMessage-string",
+            "additionalParams": true,
+            "id": "chatOllama_0-input-stop-string",
             "display": true
           },
           {
-            "label": "Return Response As",
-            "name": "agentReturnResponseAs",
-            "type": "options",
-            "options": [
-              {
-                "label": "User Message",
-                "name": "userMessage"
-              },
-              {
-                "label": "Assistant Message",
-                "name": "assistantMessage"
-              }
-            ],
-            "default": "userMessage",
-            "id": "agentAgentflow_0-input-agentReturnResponseAs-options",
-            "display": true
-          },
-          {
-            "label": "Update Flow State",
-            "name": "agentUpdateState",
-            "description": "Update runtime state during the execution of the workflow",
-            "type": "array",
+            "label": "Tail Free Sampling",
+            "name": "tfsZ",
+            "type": "number",
+            "description": "Tail free sampling is used to reduce the impact of less probable tokens from the output. A higher value (e.g., 2.0) will reduce the impact more, while a value of 1.0 disables this setting. (Default: 1). Refer to <a target=\"_blank\" href=\"https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values\">docs</a> for more details",
+            "step": 0.1,
             "optional": true,
-            "acceptVariable": true,
-            "array": [
-              {
-                "label": "Key",
-                "name": "key",
-                "type": "asyncOptions",
-                "loadMethod": "listRuntimeStateKeys",
-                "freeSolo": true
-              },
-              {
-                "label": "Value",
-                "name": "value",
-                "type": "string",
-                "acceptVariable": true,
-                "acceptNodeOutputAsVariable": true
-              }
-            ],
-            "id": "agentAgentflow_0-input-agentUpdateState-array",
+            "additionalParams": true,
+            "id": "chatOllama_0-input-tfsZ-number",
             "display": true
           }
         ],
-        "inputAnchors": [],
-        "inputs": {
-          "agentModel": "chatOllama",
-          "agentMessages": "",
-          "agentTools": [
-            {
-              "agentSelectedTool": "customMCP",
-              "agentSelectedToolRequiresHumanInput": "",
-              "agentSelectedToolConfig": {
-                "mcpServerConfig": "{\n  \"url\": \"http://cognee-mcp:8000/sse\"\n}",
-                "mcpActions": "[\"cognify\",\"delete\",\"list_data\",\"prune\",\"search\",\"save_interaction\"]",
-                "agentSelectedTool": "customMCP"
-              }
-            }
-          ],
-          "agentKnowledgeDocumentStores": "",
-          "agentKnowledgeVSEmbeddings": "",
-          "agentEnableMemory": true,
-          "agentMemoryType": "allMessages",
-          "agentUserMessage": "",
-          "agentReturnResponseAs": "userMessage",
-          "agentUpdateState": "",
-          "agentModelConfig": {
-            "cache": "",
-            "baseUrl": "http://ollama:11434",
-            "modelName": "qwen3:4b-instruct-2507-q4_K_M",
-            "temperature": "0.7",
-            "allowImageUploads": "",
-            "streaming": true,
-            "jsonMode": "",
-            "keepAlive": "5m",
-            "topP": "",
-            "topK": "",
-            "mirostat": "",
-            "mirostatEta": "",
-            "mirostatTau": "",
-            "numCtx": "",
-            "numGpu": "",
-            "numThread": "",
-            "repeatLastN": "",
-            "repeatPenalty": "",
-            "stop": "",
-            "tfsZ": "",
-            "agentModel": "chatOllama"
+        "inputAnchors": [
+          {
+            "label": "Cache",
+            "name": "cache",
+            "type": "BaseCache",
+            "optional": true,
+            "id": "chatOllama_0-input-cache-BaseCache",
+            "display": true
           }
+        ],
+        "inputs": {
+          "cache": "",
+          "baseUrl": "http://ollama:11434",
+          "modelName": "qwen3-next:80b-cloud",
+          "temperature": "0.7",
+          "allowImageUploads": "",
+          "streaming": true,
+          "jsonMode": "",
+          "keepAlive": "5m",
+          "topP": "",
+          "topK": "",
+          "mirostat": "",
+          "mirostatEta": "",
+          "mirostatTau": "",
+          "numCtx": "",
+          "numGpu": "",
+          "numThread": "",
+          "repeatLastN": "",
+          "repeatPenalty": "",
+          "stop": "",
+          "tfsZ": ""
         },
         "outputAnchors": [
           {
-            "id": "agentAgentflow_0-output-agentAgentflow",
-            "label": "Agent",
-            "name": "agentAgentflow"
+            "id": "chatOllama_0-output-chatOllama-ChatOllama|ChatOllama|BaseChatModel|BaseLanguageModel|Runnable",
+            "name": "chatOllama",
+            "label": "ChatOllama",
+            "description": "Chat completion using open-source LLM on Ollama",
+            "type": "ChatOllama | ChatOllama | BaseChatModel | BaseLanguageModel | Runnable"
           }
         ],
         "outputs": {},
         "selected": false
       },
-      "type": "agentFlow",
-      "width": 289,
-      "height": 100,
+      "width": 300,
+      "height": 681,
       "selected": false,
-      "dragging": false,
       "positionAbsolute": {
-        "x": 236.5,
-        "y": 90.75
-      }
+        "x": 25.73800862678766,
+        "y": 217.08560177919998
+      },
+      "dragging": false
+    },
+    {
+      "id": "customMCP_0",
+      "position": {
+        "x": 936.5178117576241,
+        "y": 279.7993835809617
+      },
+      "type": "customNode",
+      "data": {
+        "id": "customMCP_0",
+        "label": "Custom MCP",
+        "version": 1.1,
+        "name": "customMCP",
+        "type": "Custom MCP Tool",
+        "baseClasses": [
+          "Tool"
+        ],
+        "category": "Tools (MCP)",
+        "description": "Custom MCP Config",
+        "inputParams": [
+          {
+            "label": "MCP Server Config",
+            "name": "mcpServerConfig",
+            "type": "code",
+            "hideCodeExecute": true,
+            "hint": {
+              "label": "How to use",
+              "value": "\nYou can use variables in the MCP Server Config with double curly braces `{{ }}` and prefix `$vars.<variableName>`. \n\nFor example, you have a variable called \"var1\":\n```json\n{\n    \"command\": \"docker\",\n    \"args\": [\n        \"run\",\n        \"-i\",\n        \"--rm\",\n        \"-e\", \"API_TOKEN\"\n    ],\n    \"env\": {\n        \"API_TOKEN\": \"{{$vars.var1}}\"\n    }\n}\n```\n\nFor example, when using SSE, you can use the variable \"var1\" in the headers:\n```json\n{\n    \"url\": \"https://api.example.com/endpoint/sse\",\n    \"headers\": {\n        \"Authorization\": \"Bearer {{$vars.var1}}\"\n    }\n}\n```\n"
+            },
+            "placeholder": "{\n    \"command\": \"npx\",\n    \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/path/to/allowed/files\"]\n}",
+            "id": "customMCP_0-input-mcpServerConfig-code",
+            "display": true
+          },
+          {
+            "label": "Available Actions",
+            "name": "mcpActions",
+            "type": "asyncMultiOptions",
+            "loadMethod": "listActions",
+            "refresh": true,
+            "id": "customMCP_0-input-mcpActions-asyncMultiOptions",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "mcpServerConfig": "{\n  \"url\": \"http://cognee-mcp:8000/sse\"\n}",
+          "mcpActions": "[\"cognify\",\"delete\",\"list_data\",\"prune\",\"search\"]"
+        },
+        "outputAnchors": [
+          {
+            "id": "customMCP_0-output-customMCP-Tool",
+            "name": "customMCP",
+            "label": "Custom MCP Tool",
+            "description": "Custom MCP Config",
+            "type": "Tool"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 663,
+      "selected": false,
+      "positionAbsolute": {
+        "x": 936.5178117576241,
+        "y": 279.7993835809617
+      },
+      "dragging": false
+    },
+    {
+      "id": "bufferMemory_0",
+      "position": {
+        "x": -340.499952235469,
+        "y": 152.02437533464388
+      },
+      "type": "customNode",
+      "data": {
+        "id": "bufferMemory_0",
+        "label": "Buffer Memory",
+        "version": 2,
+        "name": "bufferMemory",
+        "type": "BufferMemory",
+        "baseClasses": [
+          "BufferMemory",
+          "BaseChatMemory",
+          "BaseMemory"
+        ],
+        "category": "Memory",
+        "description": "Retrieve chat messages stored in database",
+        "inputParams": [
+          {
+            "label": "Session Id",
+            "name": "sessionId",
+            "type": "string",
+            "description": "If not specified, a random id will be used. Learn <a target=\"_blank\" href=\"https://docs.flowiseai.com/memory#ui-and-embedded-chat\">more</a>",
+            "default": "",
+            "additionalParams": true,
+            "optional": true,
+            "id": "bufferMemory_0-input-sessionId-string",
+            "display": true
+          },
+          {
+            "label": "Memory Key",
+            "name": "memoryKey",
+            "type": "string",
+            "default": "chat_history",
+            "additionalParams": true,
+            "id": "bufferMemory_0-input-memoryKey-string",
+            "display": true
+          }
+        ],
+        "inputAnchors": [],
+        "inputs": {
+          "sessionId": "",
+          "memoryKey": "chat_history"
+        },
+        "outputAnchors": [
+          {
+            "id": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+            "name": "bufferMemory",
+            "label": "BufferMemory",
+            "description": "Retrieve chat messages stored in database",
+            "type": "BufferMemory | BaseChatMemory | BaseMemory"
+          }
+        ],
+        "outputs": {},
+        "selected": false
+      },
+      "width": 300,
+      "height": 257,
+      "selected": false,
+      "positionAbsolute": {
+        "x": -340.499952235469,
+        "y": 152.02437533464388
+      },
+      "dragging": false
     }
   ],
   "edges": [
     {
-      "source": "startAgentflow_0",
-      "sourceHandle": "startAgentflow_0-output-startAgentflow",
-      "target": "agentAgentflow_0",
-      "targetHandle": "agentAgentflow_0",
-      "data": {
-        "sourceColor": "#7EE787",
-        "targetColor": "#4DD0E1",
-        "isHumanInput": false
-      },
-      "type": "agentFlow",
-      "id": "startAgentflow_0-startAgentflow_0-output-startAgentflow-agentAgentflow_0-agentAgentflow_0"
+      "source": "chatOllama_0",
+      "sourceHandle": "chatOllama_0-output-chatOllama-ChatOllama|ChatOllama|BaseChatModel|BaseLanguageModel|Runnable",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-model-BaseChatModel",
+      "type": "buttonedge",
+      "id": "chatOllama_0-chatOllama_0-output-chatOllama-ChatOllama|ChatOllama|BaseChatModel|BaseLanguageModel|Runnable-toolAgent_0-toolAgent_0-input-model-BaseChatModel"
+    },
+    {
+      "source": "customMCP_0",
+      "sourceHandle": "customMCP_0-output-customMCP-Tool",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-tools-Tool",
+      "type": "buttonedge",
+      "id": "customMCP_0-customMCP_0-output-customMCP-Tool-toolAgent_0-toolAgent_0-input-tools-Tool"
+    },
+    {
+      "source": "bufferMemory_0",
+      "sourceHandle": "bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-memory-BaseChatMemory",
+      "type": "buttonedge",
+      "id": "bufferMemory_0-bufferMemory_0-output-bufferMemory-BufferMemory|BaseChatMemory|BaseMemory-toolAgent_0-toolAgent_0-input-memory-BaseChatMemory"
     }
   ]
 }
